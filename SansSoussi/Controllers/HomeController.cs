@@ -9,6 +9,7 @@ using System.Web.Security;
 
 namespace SansSoussi.Controllers
 {
+    [RequireHttps]
     public class HomeController : Controller
     {
         SqlConnection _dbConnection;

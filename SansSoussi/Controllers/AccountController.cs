@@ -11,6 +11,7 @@ using SansSoussi.Models;
 
 namespace SansSoussi.Controllers
 {
+    [RequireHttps]
     public class AccountController : Controller
     {
 
