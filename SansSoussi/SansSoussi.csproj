@@ -23,7 +23,7 @@
     <UseIISExpress>false</UseIISExpress>
     <MvcProjectUpgradeChecked>true</MvcProjectUpgradeChecked>
     <Use64BitIISExpress />
-    <IISExpressSSLPort />
+    <IISExpressSSLPort>44312</IISExpressSSLPort>
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
