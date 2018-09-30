@@ -52,6 +52,7 @@ namespace SansSoussi.Controllers
 
         [HttpPost]
         [ValidateInput(false)]
+        [ValidateAntiForgeryToken]
         public ActionResult Comments(string comment)
         {
             string status = "success";
@@ -99,10 +100,12 @@ namespace SansSoussi.Controllers
             if (user != null)
             {
                 if (!string.IsNullOrEmpty(searchData))
-                { 
+                {
                     //SqlCommand cmd = new SqlCommand("Select Comment from Comments where UserId = '" + user.ProviderUserKey + "' and Comment like '%" + searchData + "%'", _dbConnection);
+
                     SqlCommand cmd = new SqlCommand("Select Comment from Comments where UserId = '" + user.ProviderUserKey + "' and Comment like @searchData", _dbConnection);
                     cmd.Parameters.AddWithValue("@searchData", "%" + searchData + "%");
+
                     _dbConnection.Open();
                     SqlDataReader rd = cmd.ExecuteReader();
 
