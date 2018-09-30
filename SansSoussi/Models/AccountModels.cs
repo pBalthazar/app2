@@ -7,6 +7,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
+using System.Text.RegularExpressions;
 
 namespace SansSoussi.Models
 {
@@ -122,6 +123,9 @@ namespace SansSoussi.Models
             if (String.IsNullOrEmpty(userName)) throw new ArgumentException("Value cannot be null or empty.", "userName");
             if (String.IsNullOrEmpty(password)) throw new ArgumentException("Value cannot be null or empty.", "password");
             if (String.IsNullOrEmpty(email)) throw new ArgumentException("Value cannot be null or empty.", "email");
+
+            Regex rx = new Regex(@"^[a-zA-Z]+[a-zA-Z0-9]*$");
+            if (!rx.IsMatch(userName)) throw new ArgumentException("Value should start with a letter and contains only letters and numbers", "userName");
 
             MembershipCreateStatus status;
             _provider.CreateUser(userName, password, email, null, null, true, null, out status);

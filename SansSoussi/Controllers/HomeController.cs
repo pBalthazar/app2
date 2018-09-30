@@ -6,6 +6,8 @@ using System.Web.Mvc;
 using System.Data.SqlClient;
 using System.Web.Configuration;
 using System.Web.Security;
+using System.Diagnostics;
+using System.Data;
 
 namespace SansSoussi.Controllers
 {
@@ -63,6 +65,10 @@ namespace SansSoussi.Controllers
                     SqlCommand cmd = new SqlCommand(
                         "insert into Comments (UserId, CommentId, Comment) Values ('" + user.ProviderUserKey + "','" + Guid.NewGuid() + "','" + comment + "')",
                     _dbConnection);
+
+                    Trace.WriteLine(cmd.CommandText);
+                    Trace.WriteLine(_dbConnection.ConnectionString);
+
                     _dbConnection.Open();
 
                     cmd.ExecuteNonQuery();
@@ -93,8 +99,10 @@ namespace SansSoussi.Controllers
             if (user != null)
             {
                 if (!string.IsNullOrEmpty(searchData))
-                {
-                    SqlCommand cmd = new SqlCommand("Select Comment from Comments where UserId = '" + user.ProviderUserKey + "' and Comment like '%" + searchData + "%'", _dbConnection);
+                { 
+                    //SqlCommand cmd = new SqlCommand("Select Comment from Comments where UserId = '" + user.ProviderUserKey + "' and Comment like '%" + searchData + "%'", _dbConnection);
+                    SqlCommand cmd = new SqlCommand("Select Comment from Comments where UserId = '" + user.ProviderUserKey + "' and Comment like @searchData", _dbConnection);
+                    cmd.Parameters.AddWithValue("@searchData", "%" + searchData + "%");
                     _dbConnection.Open();
                     SqlDataReader rd = cmd.ExecuteReader();
 
