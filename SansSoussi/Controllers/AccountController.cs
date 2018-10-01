@@ -9,12 +9,14 @@ using System.Web.Routing;
 using System.Web.Security;
 using Facebook;
 using SansSoussi.Models;
+using SansSoussi.Filter;
 
 namespace SansSoussi.Controllers
 {
     [RequireHttps]
     public class AccountController : Controller
     {
+        private const int COUNT_BY_MINUTE = 30;
 
         public IFormsAuthenticationService FormsService { get; set; }
         public IMembershipService MembershipService { get; set; }
@@ -31,12 +33,14 @@ namespace SansSoussi.Controllers
         // URL: /Account/LogOn
         // **************************************
 
+        [Throttle(TimeUnit = TimeUnit.Minute, Count = COUNT_BY_MINUTE)]
         public ActionResult LogOn()
         {
             return View();
         }
 
         [HttpPost]
+        [Throttle(TimeUnit = TimeUnit.Minute, Count = COUNT_BY_MINUTE)]
         public ActionResult LogOn(LogOnModel model, string returnUrl)
         {
             if (ModelState.IsValid)
@@ -70,7 +74,7 @@ namespace SansSoussi.Controllers
         // **************************************
         // URL: /Account/LogOff
         // **************************************
-
+        [Throttle(TimeUnit = TimeUnit.Minute, Count = COUNT_BY_MINUTE)]
         public ActionResult LogOff()
         {
             FormsService.SignOut();
@@ -81,7 +85,7 @@ namespace SansSoussi.Controllers
         // **************************************
         // URL: /Account/Register
         // **************************************
-
+        [Throttle(TimeUnit = TimeUnit.Minute, Count = COUNT_BY_MINUTE)]
         public ActionResult Register()
         {
             ViewBag.PasswordLength = MembershipService.MinPasswordLength;
@@ -89,6 +93,7 @@ namespace SansSoussi.Controllers
         }
 
         [HttpPost]
+        [Throttle(TimeUnit = TimeUnit.Minute, Count = COUNT_BY_MINUTE)]
         public ActionResult Register(RegisterModel model)
         {
             if (ModelState.IsValid)
@@ -121,6 +126,7 @@ namespace SansSoussi.Controllers
         // **************************************
 
         [Authorize]
+        [Throttle(TimeUnit = TimeUnit.Minute, Count = COUNT_BY_MINUTE)]
         public ActionResult ChangePassword()
         {
             ViewBag.PasswordLength = MembershipService.MinPasswordLength;
@@ -129,6 +135,7 @@ namespace SansSoussi.Controllers
 
         [Authorize]
         [HttpPost]
+        [Throttle(TimeUnit = TimeUnit.Minute, Count = COUNT_BY_MINUTE)]
         public ActionResult ChangePassword(ChangePasswordModel model)
         {
             if (ModelState.IsValid)
@@ -151,7 +158,7 @@ namespace SansSoussi.Controllers
         // **************************************
         // URL: /Account/ChangePasswordSuccess
         // **************************************
-
+        [Throttle(TimeUnit = TimeUnit.Minute, Count = COUNT_BY_MINUTE)]
         public ActionResult ChangePasswordSuccess()
         {
             return View();
