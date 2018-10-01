@@ -14,7 +14,8 @@
 
 @Html.ValidationSummary(true, "Login was unsuccessful. Please correct the errors and try again.")
 
-@using (Html.BeginForm()) {
+@using (Html.BeginForm())
+{
     <div>
         <fieldset>
             <legend>Account Information</legend>
@@ -44,5 +45,9 @@
                 <input type="submit" value="Log On" />
             </p>
         </fieldset>
+    </div>
+    <div>
+        <h2>Login</h2>
+        @Html.ActionLink("Login with Facebook.", "Facebook", "Account")
     </div>
 }

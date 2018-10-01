@@ -124,7 +124,7 @@ namespace SansSoussi.Models
             if (String.IsNullOrEmpty(password)) throw new ArgumentException("Value cannot be null or empty.", "password");
             if (String.IsNullOrEmpty(email)) throw new ArgumentException("Value cannot be null or empty.", "email");
 
-            Regex rx = new Regex(@"^[a-zA-Z]+[a-zA-Z0-9]*$");
+            Regex rx = new Regex(@"^[a-zA-Z]+[a-zA-Z0-9@.]*$");
             if (!rx.IsMatch(userName)) throw new ArgumentException("Value should start with a letter and contains only letters and numbers", "userName");
 
             MembershipCreateStatus status;
