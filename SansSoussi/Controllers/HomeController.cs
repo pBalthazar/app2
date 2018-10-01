@@ -9,12 +9,15 @@ using System.Web.Security;
 using System.Diagnostics;
 using System.Data;
 using System.Text.RegularExpressions;
+using SansSoussi.Filter;
 
 namespace SansSoussi.Controllers
 {
     [RequireHttps]
     public class HomeController : Controller
     {
+        private const int COUNT_BY_MINUTE = 30;
+
         SqlConnection _dbConnection;
         public HomeController()
         {
@@ -55,6 +58,7 @@ namespace SansSoussi.Controllers
             return encodedText;
         }
 
+        [Throttle(TimeUnit = TimeUnit.Minute, Count = COUNT_BY_MINUTE)]
         public ActionResult Index()
         {
             ViewBag.Message = "Parce que marcher devrait se faire SansSoussi";
@@ -62,6 +66,7 @@ namespace SansSoussi.Controllers
             return View();
         }
 
+        [Throttle(TimeUnit = TimeUnit.Minute, Count = COUNT_BY_MINUTE)]
         public ActionResult Comments()
         {
             List<string> comments = new List<string>();
@@ -88,6 +93,7 @@ namespace SansSoussi.Controllers
         [HttpPost]
         [ValidateInput(false)]
         [ValidateAntiForgeryToken]
+        [Throttle(TimeUnit = TimeUnit.Minute, Count = COUNT_BY_MINUTE)]
         public ActionResult Comments(string comment)
         {
             string status = "success";
@@ -127,6 +133,7 @@ namespace SansSoussi.Controllers
             return Json(status);
         }
 
+        [Throttle(TimeUnit = TimeUnit.Minute, Count = COUNT_BY_MINUTE)]
         public ActionResult Search(string searchData)
         {
             List<string> searchResults = new List<string>();
@@ -159,6 +166,7 @@ namespace SansSoussi.Controllers
         }
 
         [HttpGet]
+        [Throttle(TimeUnit = TimeUnit.Minute, Count = COUNT_BY_MINUTE)]
         public ActionResult Emails()
         {
             return View();
@@ -166,6 +174,7 @@ namespace SansSoussi.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Throttle(TimeUnit = TimeUnit.Minute, Count = COUNT_BY_MINUTE)]
         public ActionResult Emails(object form)
         {
             List<string> searchResults = new List<string>();
@@ -200,6 +209,7 @@ namespace SansSoussi.Controllers
             return Json(searchResults);
         }
 
+        [Throttle(TimeUnit = TimeUnit.Minute, Count = COUNT_BY_MINUTE)]
         public ActionResult About()
         {
             return View();
