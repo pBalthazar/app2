@@ -29,6 +29,13 @@ namespace SansSoussi
 
         }
 
+        protected void Application_PreSendRequestHeaders(object sender, EventArgs e)
+        {
+            HttpContext.Current.Response.Headers.Remove("X-AspNet-Version");
+            HttpContext.Current.Response.Headers.Remove("X-AspNetMvc-Version");
+            HttpContext.Current.Response.Headers.Remove("Server");
+        }
+
         protected void Application_BeginRequest(Object sender, EventArgs e)
         {
             switch (Request.Url.Scheme)
@@ -47,6 +54,8 @@ namespace SansSoussi
         protected void Application_Start()
         {
             AreaRegistration.RegisterAllAreas();
+
+            MvcHandler.DisableMvcResponseHeader = true;
 
             RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);
