@@ -3,7 +3,7 @@
     {
         url: ResolveUrl("~/home/emails"),
         type: "POST",
-        data: { __RequestVerificationToken: $("#__RequestVerificationToken").val() },
+        data: { __RequestVerificationToken: $('[name=__RequestVerificationToken]').val() },
         success: function (status) {
             var emails = "";
             $.each(status, function (index, item) { emails += item + "<br/>"; });
