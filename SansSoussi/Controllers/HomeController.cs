@@ -8,6 +8,7 @@ using System.Web.Configuration;
 using System.Web.Security;
 using System.Diagnostics;
 using System.Data;
+using System.Text.RegularExpressions;
 
 namespace SansSoussi.Controllers
 {
@@ -18,6 +19,40 @@ namespace SansSoussi.Controllers
         public HomeController()
         {
              _dbConnection = new SqlConnection(WebConfigurationManager.ConnectionStrings["ApplicationServices"].ConnectionString);
+        }
+
+        private string SanitizeComment(string text)
+        {
+            string sanitizedText = EncodeHtml(text);
+            List<string> evilStrings = new List<string>() {
+                "<script",
+                "alert(",
+                "onload=",
+                "onmouseover="
+            };
+
+            foreach (var evil in evilStrings)
+            {
+                sanitizedText = sanitizedText.Replace(evil, "--EvilString--");
+            }
+
+            return sanitizedText;
+
+        }
+
+        private bool IsHtmlEncoded(string text)
+        {
+            return (HttpUtility.HtmlDecode(text) != text);
+        }
+
+        private string EncodeHtml(string text)
+        {
+            string encodedText = text;
+            if (!IsHtmlEncoded(encodedText))
+            {
+                encodedText = HttpUtility.HtmlEncode(text);
+            }
+            return encodedText;
         }
 
         public ActionResult Index()
@@ -41,7 +76,7 @@ namespace SansSoussi.Controllers
 
                 while (rd.Read())
                 {
-                    comments.Add(rd.GetString(0));
+                    comments.Add(SanitizeComment(rd.GetString(0)));
                 }
 
                 rd.Close();
@@ -62,9 +97,10 @@ namespace SansSoussi.Controllers
                 MembershipUser user = Membership.Provider.GetUser(HttpContext.User.Identity.Name, true);
                 if (user != null)
                 {
+                    string commentEndoded = SanitizeComment(comment);
                     //add new comment to db
                     SqlCommand cmd = new SqlCommand(
-                        "insert into Comments (UserId, CommentId, Comment) Values ('" + user.ProviderUserKey + "','" + Guid.NewGuid() + "','" + comment + "')",
+                        "insert into Comments (UserId, CommentId, Comment) Values ('" + user.ProviderUserKey + "','" + Guid.NewGuid() + "','" + commentEndoded + "')",
                     _dbConnection);
 
                     Trace.WriteLine(cmd.CommandText);
@@ -112,7 +148,7 @@ namespace SansSoussi.Controllers
 
                     while (rd.Read())
                     {
-                        searchResults.Add(rd.GetString(0));
+                        searchResults.Add(SanitizeComment(rd.GetString(0)));
                     }
 
                     rd.Close();
